@@ -3,13 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Reza Monjezi – Chemical Process Engineer</title>
+  <title>Reza Monjezi – Chemical Engineer</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --primary: #111;
-      --secondary: #555;
-      --accent: #007acc;
       --bg: #ffffff;
+      --text: #1a1a1a;
+      --muted: #666;
+      --accent: #3b82f6;
+      --accent-bg: #f0f4ff;
     }
 
     * {
@@ -19,57 +21,83 @@
     }
 
     body {
-      font-family: "Helvetica Neue", sans-serif;
+      font-family: 'Inter', sans-serif;
       background: var(--bg);
-      color: var(--primary);
-      line-height: 1.6;
+      color: var(--text);
+      line-height: 1.7;
+      font-size: 16px;
       padding: 2rem;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
     }
 
     header {
       text-align: center;
-      margin-bottom: 3rem;
+      margin-bottom: 4rem;
     }
 
     header h1 {
-      font-size: 2.5rem;
-      font-weight: 600;
+      font-size: 3rem;
+      font-weight: 700;
     }
 
     header p {
-      color: var(--secondary);
+      color: var(--muted);
       margin-top: 0.5rem;
+      font-size: 1.1rem;
     }
 
     nav {
-      margin-top: 1rem;
+      margin-top: 1.5rem;
     }
 
     nav a {
+      margin: 0 1rem;
       color: var(--accent);
       text-decoration: none;
-      margin: 0 1rem;
-      font-size: 0.95rem;
+      font-weight: 600;
+      position: relative;
     }
 
-    .container {
-      max-width: 700px;
-      margin: auto;
+    nav a::after {
+      content: '';
+      display: block;
+      width: 0;
+      height: 2px;
+      background: var(--accent);
+      transition: width 0.3s;
+    }
+
+    nav a:hover::after {
+      width: 100%;
     }
 
     section {
-      margin-bottom: 3rem;
+      margin-bottom: 4rem;
     }
 
     h2 {
-      font-size: 1.5rem;
+      font-size: 1.8rem;
       margin-bottom: 1rem;
       border-left: 4px solid var(--accent);
-      padding-left: 0.5rem;
+      padding-left: 1rem;
     }
 
     .project {
       margin-bottom: 1.5rem;
+      background: var(--accent-bg);
+      padding: 1.2rem 1rem;
+      border-radius: 8px;
+    }
+
+    .project strong {
+      display: block;
+      font-weight: 600;
+      font-size: 1.05rem;
+      margin-bottom: 0.3rem;
     }
 
     a {
@@ -80,61 +108,58 @@
     footer {
       text-align: center;
       font-size: 0.9rem;
-      color: var(--secondary);
-      margin-top: 3rem;
+      color: var(--muted);
+      margin-top: 4rem;
     }
 
     @media (max-width: 600px) {
-      body {
-        padding: 1.5rem;
-      }
-
       header h1 {
         font-size: 2rem;
+      }
+      nav a {
+        margin: 0 0.5rem;
+        font-size: 0.95rem;
       }
     }
   </style>
 </head>
 <body>
-
-  <header>
-    <h1>Reza Monjezi</h1>
-    <p>Chemical Process Engineer | PhD | Postdoc | Data & Automation</p>
-    <nav>
-      <a href="#about">About</a>
-      <a href="#projects">Projects</a>
-      <a href="#cv">CV</a>
-      <a href="#contact">Contact</a>
-    </nav>
-  </header>
-
   <div class="container">
+    <header>
+      <h1>Reza Monjezi</h1>
+      <p>Chemical Engineer · PhD · Data & Automation Enthusiast</p>
+      <nav>
+        <a href="#about">About</a>
+        <a href="#projects">Projects</a>
+        <a href="#cv">CV</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </header>
+
     <section id="about">
       <h2>About Me</h2>
-      <p>I’m a chemical engineer with a PhD from Ghent University and postdoctoral experience at UCLouvain. I specialize in catalytic pilot plant development, digital process optimization, and AI-assisted modeling for chemical R&D. My work bridges hands-on experimentation with data-driven insights to build cleaner, smarter processes.</p>
+      <p>I am a PhD chemical engineer with a strong passion for catalytic process development, data-driven optimization, and sustainable innovation. I’ve led the design and automation of pilot-scale systems, created digital twins for process validation, and taught advanced Python skills to fellow engineers.</p>
     </section>
 
     <section id="projects">
       <h2>Projects</h2>
       <div class="project">
-        <strong>LoPOx System</strong><br>
-        Designed and led a €250k ozone-based VOC oxidation pilot setup, achieving 30% cost reduction versus commercial alternatives.
+        <strong>LoPOx: Ozone-based Pilot Plant</strong>
+        Led the development of a €250k ozone-assisted VOC oxidation unit with 30% cost savings and full digital integration.
       </div>
       <div class="project">
-        <strong>PyCRE – Python for Chemical Reaction Engineering</strong><br>
-        Internal course taught to 40+ colleagues, covering data manipulation, kinetic modeling, and Python automation.
+        <strong>PyCRE</strong>
+        Co-organized and delivered a Python course for reaction engineering, helping 40+ engineers enhance data fluency.
       </div>
       <div class="project">
-        <strong>AI + Digital Twin Pipeline</strong><br>
-        Developed a proof-of-concept integrating IoT data, AI optimization, and real-time simulation for advanced process control.
+        <strong>Digital Twin + AI Workflow</strong>
+        Developed a feedback system using IoT, AI, and simulation to optimize chemical processes in near real-time.
       </div>
     </section>
 
     <section id="cv">
       <h2>CV</h2>
-      <p>
-        <a href="CV_Reza_Monjezi.pdf" target="_blank">Download my CV (PDF)</a>
-      </p>
+      <p><a href="CV_Reza_Monjezi.pdf" target="_blank">Download my full CV (PDF)</a></p>
     </section>
 
     <section id="contact">
@@ -143,11 +168,10 @@
       <p>LinkedIn: <a href="https://linkedin.com/in/rezamonjezi" target="_blank">linkedin.com/in/rezamonjezi</a></p>
       <p>GitHub: <a href="https://github.com/rmonjezi" target="_blank">github.com/rmonjezi</a></p>
     </section>
+
+    <footer>
+      &copy; 2025 Reza Monjezi · Clean Design Powered by GitHub Pages
+    </footer>
   </div>
-
-  <footer>
-    &copy; 2025 Reza Monjezi
-  </footer>
-
 </body>
 </html>
