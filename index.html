@@ -1,177 +1,383 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Reza Monjezi – Chemical Engineer</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="A sleek, mesmerizing personal site for GitHub Pages." />
+  <title>Reza Monjezi — Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #ffffff;
-      --text: #1a1a1a;
-      --muted: #666;
-      --accent: #3b82f6;
-      --accent-bg: #f0f4ff;
+      --bg: #0b0d0f;
+      --bg-2: #0f1115;
+      --text: #e8edf2;
+      --muted: #a6b0c3;
+      --accent: #7c5cff;
+      --accent-2: #2dd4bf;
+      --card: rgba(255,255,255,0.06);
+      --glass: rgba(255,255,255,0.08);
+      --border: rgba(255,255,255,0.12);
+      --shadow: 0 10px 30px rgba(0,0,0,0.35);
+      --radius: 20px;
+    }
+    html[data-theme="light"] {
+      --bg: #f7f8fb;
+      --bg-2: #ffffff;
+      --text: #0d1222;
+      --muted: #4c5567;
+      --accent: #5b3ee4;
+      --accent-2: #0ea5a5;
+      --card: rgba(0,0,0,0.04);
+      --glass: rgba(255,255,255,0.75);
+      --border: rgba(0,0,0,0.08);
+      --shadow: 0 10px 30px rgba(10,10,10,0.08);
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
     body {
-      font-family: 'Inter', sans-serif;
-      background: var(--bg);
+      margin: 0;
+      font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       color: var(--text);
-      line-height: 1.7;
-      font-size: 16px;
-      padding: 2rem;
+      background: radial-gradient(1200px 800px at 10% 10%, rgba(124,92,255,0.15), transparent 60%),
+                  radial-gradient(1000px 700px at 90% 10%, rgba(45,212,191,0.18), transparent 60%),
+                  radial-gradient(1200px 900px at 50% 120%, rgba(124,92,255,0.12), transparent 60%),
+                  var(--bg);
+      overflow-x: hidden;
     }
 
-    .container {
-      max-width: 900px;
-      margin: 0 auto;
+    /* Subtle noise texture */
+    .noise {
+      pointer-events: none;
+      position: fixed;
+      inset: 0;
+      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="240" height="240" viewBox="0 0 240 240"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23n)" opacity="0.03"/></svg>');
+      mix-blend-mode: soft-light;
+      z-index: 0;
     }
+
+    /* Floating particles canvas */
+    #stars { position: fixed; inset: 0; z-index: 0; opacity: 0.5; }
 
     header {
-      text-align: center;
-      margin-bottom: 4rem;
+      position: sticky; top: 0; z-index: 10;
+      backdrop-filter: blur(10px);
+      background: linear-gradient(to bottom, var(--glass), transparent);
+      border-bottom: 1px solid var(--border);
     }
-
-    header h1 {
-      font-size: 3rem;
-      font-weight: 700;
+    .nav {
+      max-width: 1100px; margin: 0 auto; padding: 14px 20px; display: flex; align-items: center; gap: 16px;
+      justify-content: space-between;
     }
-
-    header p {
-      color: var(--muted);
-      margin-top: 0.5rem;
-      font-size: 1.1rem;
+    .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; letter-spacing: 0.4px; }
+    .brand .logo { width: 34px; height: 34px; display: grid; place-items: center; border-radius: 10px; background: linear-gradient(135deg, var(--accent), var(--accent-2)); box-shadow: var(--shadow); }
+    nav a { color: var(--muted); text-decoration: none; margin: 0 10px; font-weight: 500; }
+    nav a:hover { color: var(--text); }
+    .actions { display: flex; gap: 10px; }
+    .btn, .ghost {
+      border-radius: 999px; padding: 10px 16px; border: 1px solid var(--border); font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
     }
+    .btn { background: linear-gradient(135deg, var(--accent), var(--accent-2)); color: white; border: none; box-shadow: var(--shadow); }
+    .ghost { background: transparent; color: var(--text); }
 
-    nav {
-      margin-top: 1.5rem;
+    main { position: relative; z-index: 1; }
+    .wrap { max-width: 1100px; margin: 0 auto; padding: 40px 20px; }
+
+    /* Hero */
+    .hero { display: grid; gap: 28px; align-items: center; padding: 70px 0; grid-template-columns: 1.2fr 0.8fr; }
+    .hero h1 { font-size: clamp(36px, 6vw, 64px); line-height: 1.06; margin: 0; letter-spacing: -0.02em; }
+    .hero p { color: var(--muted); font-size: clamp(16px, 2.2vw, 19px); margin: 10px 0 24px; }
+    .cta { display: flex; gap: 12px; flex-wrap: wrap; }
+
+    .avatar {
+      width: min(360px, 85%); justify-self: center; aspect-ratio: 1/1; border-radius: 28px; padding: 8px; background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      box-shadow: var(--shadow);
     }
-
-    nav a {
-      margin: 0 1rem;
-      color: var(--accent);
-      text-decoration: none;
-      font-weight: 600;
-      position: relative;
+    .avatar-inner { width: 100%; height: 100%; border-radius: 22px; background: var(--bg-2); display: grid; place-items: center; position: relative; overflow: hidden; }
+    .avatar-inner::before {
+      content: ""; position: absolute; inset: -30%; background:
+        radial-gradient(350px 350px at 80% 20%, rgba(124,92,255,0.25), transparent 60%),
+        radial-gradient(300px 300px at 20% 80%, rgba(45,212,191,0.25), transparent 60%);
+      filter: blur(30px);
+      animation: drift 14s ease-in-out infinite alternate;
     }
+    @keyframes drift { from { transform: rotate(0deg) translateY(-10px); } to { transform: rotate(8deg) translateY(10px); } }
+    .avatar svg { width: 70%; opacity: 0.9; }
 
-    nav a::after {
-      content: '';
-      display: block;
-      width: 0;
-      height: 2px;
-      background: var(--accent);
-      transition: width 0.3s;
+    /* Sections */
+    section { margin: 70px 0; }
+    .section-title { font-size: 28px; margin: 0 0 18px; }
+    .muted { color: var(--muted); }
+
+    /* Cards */
+    .grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 16px; }
+    .card { grid-column: span 4; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; position: relative; overflow: hidden; transition: transform .2s ease, border-color .2s ease; }
+    .card:hover { transform: translateY(-4px); border-color: rgba(124,92,255,0.45); }
+    .card .shine { position:absolute; inset:-1px; background: radial-gradient(400px 80px at var(--x,50%) -10%, rgba(255,255,255,0.18), transparent 40%); pointer-events: none; }
+
+    .pill { display:inline-flex; align-items:center; gap:6px; padding:6px 10px; border-radius:999px; border:1px solid var(--border); background: rgba(255,255,255,0.04); font-size: 12px; color: var(--muted); }
+
+    .project-title { font-weight: 700; margin: 12px 0 8px; }
+    .project-desc { color: var(--muted); margin: 0 0 12px; }
+    .tags { display:flex; flex-wrap: wrap; gap:8px; }
+    .tag { font-size:12px; border:1px solid var(--border); padding:4px 8px; border-radius: 999px; color: var(--muted); }
+
+    /* Timeline */
+    .timeline { position: relative; padding-left: 24px; }
+    .timeline::before { content:""; position:absolute; left: 7px; top: 6px; bottom: 6px; width: 2px; background: linear-gradient(var(--accent), var(--accent-2)); border-radius: 2px; }
+    .t-item { position: relative; margin: 16px 0; padding-left: 12px; }
+    .t-item::before { content:""; position:absolute; left: -2px; top: 8px; width: 10px; height: 10px; border-radius: 50%; background: var(--bg-2); border: 2px solid var(--accent); }
+    .t-role { font-weight: 700; }
+    .t-meta { color: var(--muted); font-size: 14px; }
+
+    /* Contact */
+    form { display: grid; gap: 12px; }
+    input, textarea {
+      width: 100%; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--border); background: var(--bg-2); color: var(--text); font: inherit;
     }
+    textarea { min-height: 120px; }
 
-    nav a:hover::after {
-      width: 100%;
+    /* Footer */
+    footer { margin: 80px 0 20px; color: var(--muted); text-align: center; }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .hero { grid-template-columns: 1fr; padding: 40px 0; }
+      .card { grid-column: span 6; }
     }
-
-    section {
-      margin-bottom: 4rem;
-    }
-
-    h2 {
-      font-size: 1.8rem;
-      margin-bottom: 1rem;
-      border-left: 4px solid var(--accent);
-      padding-left: 1rem;
-    }
-
-    .project {
-      margin-bottom: 1.5rem;
-      background: var(--accent-bg);
-      padding: 1.2rem 1rem;
-      border-radius: 8px;
-    }
-
-    .project strong {
-      display: block;
-      font-weight: 600;
-      font-size: 1.05rem;
-      margin-bottom: 0.3rem;
-    }
-
-    a {
-      color: var(--accent);
-      text-decoration: none;
-    }
-
-    footer {
-      text-align: center;
-      font-size: 0.9rem;
-      color: var(--muted);
-      margin-top: 4rem;
-    }
-
-    @media (max-width: 600px) {
-      header h1 {
-        font-size: 2rem;
-      }
-      nav a {
-        margin: 0 0.5rem;
-        font-size: 0.95rem;
-      }
+    @media (max-width: 640px) {
+      nav { display: none; }
+      .card { grid-column: span 12; }
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <header>
-      <h1>Reza Monjezi</h1>
-      <p>Chemical Engineer · PhD · Data & Automation Enthusiast</p>
-      <nav>
-        <a href="#about">About</a>
+  <canvas id="stars" aria-hidden="true"></canvas>
+  <div class="noise" aria-hidden="true"></div>
+  <header>
+    <div class="nav">
+      <div class="brand">
+        <div class="logo" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 3l2.5 5 5 .7-3.7 3.6.9 5-4.7-2.5L7.3 17l.9-5L4.5 8.7l5-.7L12 3z" fill="white" opacity=".9"/>
+          </svg>
+        </div>
+        <span>Reza Monjezi</span>
+      </div>
+      <nav aria-label="Primary">
         <a href="#projects">Projects</a>
-        <a href="#cv">CV</a>
+        <a href="#about">About</a>
+        <a href="#experience">Experience</a>
         <a href="#contact">Contact</a>
       </nav>
-    </header>
-
-    <section id="about">
-      <h2>About Me</h2>
-      <p>I am a PhD chemical engineer with a strong passion for catalytic process development, data-driven optimization, and sustainable innovation. I’ve led the design and automation of pilot-scale systems, created digital twins for process validation, and taught advanced Python skills to fellow engineers.</p>
-    </section>
-
-    <section id="projects">
-      <h2>Projects</h2>
-      <div class="project">
-        <strong>LoPOx: Ozone-based Pilot Plant</strong>
-        Led the development of a €250k ozone-assisted VOC oxidation unit with 30% cost savings and full digital integration.
+      <div class="actions">
+        <a class="ghost" href="#contact" aria-label="Contact">Contact</a>
+        <button id="theme-toggle" class="btn" aria-label="Toggle theme">Toggle theme</button>
       </div>
-      <div class="project">
-        <strong>PyCRE</strong>
-        Co-organized and delivered a Python course for reaction engineering, helping 40+ engineers enhance data fluency.
-      </div>
-      <div class="project">
-        <strong>Digital Twin + AI Workflow</strong>
-        Developed a feedback system using IoT, AI, and simulation to optimize chemical processes in near real-time.
-      </div>
-    </section>
+    </div>
+  </header>
 
-    <section id="cv">
-      <h2>CV</h2>
-      <p><a href="CV_Reza_Monjezi.pdf" target="_blank">Download my full CV (PDF)</a></p>
-    </section>
+  <main>
+    <div class="wrap">
+      <section class="hero">
+        <div>
+          <p class="pill">Open to opportunities · Chemical Reaction Engineering · ML for Kinetics</p>
+          <h1>Hi, I’m Reza — I design catalytic experiments and models that turn noisy data into insight.</h1>
+          <p>
+            PhD in Chemical Engineering (UGent). I build kinetic models, pilot-scale setups, and data workflows that bridge labs and production. Exploring the interface of mechanistic and data‑driven modeling for sustainable processes.
+          </p>
+          <div class="cta">
+            <a class="btn" href="YOUR_RESUME_LINK.pdf" target="_blank" rel="noopener">Download Résumé</a>
+            <a class="ghost" href="#projects">See my work</a>
+          </div>
+        </div>
+        <div class="avatar" aria-hidden="true">
+          <div class="avatar-inner">
+            <svg viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="g" x1="0" x2="1" y1="0" y2="1">
+                  <stop offset="0%" stop-color="var(--accent)"/>
+                  <stop offset="100%" stop-color="var(--accent-2)"/>
+                </linearGradient>
+              </defs>
+              <path fill="url(#g)" d="M300,520Q223,540,150,500Q77,460,67,380Q57,300,82,224Q107,148,174,120Q241,92,317,99Q393,106,443,158Q493,210,522,280Q551,350,512,410Q473,470,400,500Q327,530,300,520Z"/>
+              <circle cx="300" cy="280" r="120" fill="rgba(0,0,0,0.15)"/>
+              <rect x="255" y="250" width="90" height="20" rx="10" fill="white" opacity="0.9"/>
+              <rect x="260" y="290" width="80" height="12" rx="6" fill="white" opacity="0.5"/>
+            </svg>
+          </div>
+        </div>
+      </section>
 
-    <section id="contact">
-      <h2>Contact</h2>
-      <p>Email: <a href="mailto:reza.monjezi@gmail.com">reza.monjezi@gmail.com</a></p>
-      <p>LinkedIn: <a href="https://linkedin.com/in/rezamonjezi" target="_blank">linkedin.com/in/rezamonjezi</a></p>
-      <p>GitHub: <a href="https://github.com/rmonjezi" target="_blank">github.com/rmonjezi</a></p>
-    </section>
+      <section id="projects">
+        <h2 class="section-title">Selected Projects</h2>
+        <p class="muted">A few things I’ve built and published.</p>
+        <div class="grid">
+          <article class="card" tabindex="0">
+            <div class="shine"></div>
+            <div class="pill">LoPOx Pilot · 2023–2025</div>
+            <h3 class="project-title">Ozone‑Assisted Catalytic Oxidation Platform</h3>
+            <p class="project-desc">Designed and constructed a custom catalytic pilot unit (\u20ac250k) enabling safe ozone‑assisted VOC abatement; integrated PLC and Python DAQ for closed‑loop testing.</p>
+            <div class="tags">
+              <span class="tag">O\u2083</span><span class="tag">Mn/Cu</span><span class="tag">PLC</span><span class="tag">Python</span>
+            </div>
+          </article>
+          <article class="card" tabindex="0">
+            <div class="shine"></div>
+            <div class="pill">Kinetics · 2024–2025</div>
+            <h3 class="project-title">Model Discrimination for CH\u2084 Oxidation</h3>
+            <p class="project-desc">Applied Python‑based parameter estimation and model selection to unravel rate‑limiting steps and surface coverages with rigorous uncertainty quantification.</p>
+            <div class="tags">
+              <span class="tag">MLE</span><span class="tag">AIC/BIC</span><span class="tag">Mechanistic</span><span class="tag">Sensitivity</span>
+            </div>
+          </article>
+          <article class="card" tabindex="0">
+            <div class="shine"></div>
+            <div class="pill">CO\u2082 Methanation · 2025</div>
+            <h3 class="project-title">Integrated Adsorption–Methanation</h3>
+            <p class="project-desc">Evaluated a novel bifunctional material for CO\u2082 capture and in‑situ methanation. Combined mechanistic models with data‑driven screening to optimize light‑off and stability.</p>
+            <div class="tags">
+              <span class="tag">CO\u2082</span><span class="tag">CH\u2084</span><span class="tag">Kinetics</span><span class="tag">ML</span>
+            </div>
+          </article>
+        </div>
+      </section>
 
-    <footer>
-      &copy; 2025 Reza Monjezi · Clean Design Powered by GitHub Pages
-    </footer>
-  </div>
+      <section id="about">
+        <h2 class="section-title">About</h2>
+        <p class="muted">I’m a chemical reaction engineer who enjoys the craft of clean experimental design, reproducible data pipelines, and models that earn their keep.</p>
+        <div class="grid">
+          <div class="card" style="grid-column: span 6;">
+            <div class="shine"></div>
+            <h3>What I do</h3>
+            <ul>
+              <li>Design catalytic pilot setups with safety at the core.</li>
+              <li>Estimate kinetic parameters and quantify uncertainty.</li>
+              <li>Automate experiments and data processing in Python.</li>
+              <li>Bridge mechanistic models with ML for faster iteration.</li>
+            </ul>
+          </div>
+          <div class="card" style="grid-column: span 6;">
+            <div class="shine"></div>
+            <h3>Toolbox</h3>
+            <p class="muted">Python (NumPy, SciPy, scikit‑learn), DAQ/PLC, DCS/MES basics, statistics, safety reviews (HAZOP‑lite).</p>
+            <div class="tags">
+              <span class="tag">Python</span><span class="tag">Kinetics</span><span class="tag">Optimization</span><span class="tag">DAQ</span><span class="tag">PLC</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="experience">
+        <h2 class="section-title">Experience</h2>
+        <div class="timeline">
+          <div class="t-item">
+            <div class="t-role">Postdoctoral Researcher — UCLouvain</div>
+            <div class="t-meta">2025 · Prof. Juray De Wilde · Adsorption–Methanation Kinetics</div>
+          </div>
+          <div class="t-item">
+            <div class="t-role">PhD Researcher — Ghent University (UGent)</div>
+            <div class="t-meta">2019–2025 · Ozone‑assisted catalytic oxidation; pilot unit design (LoPOx)</div>
+          </div>
+          <div class="t-item">
+            <div class="t-role">Project Lead</div>
+            <div class="t-meta">€250k budget · 30% cost reduction vs. vendor quotes</div>
+          </div>
+        </div>
+      </section>
+
+      <section id="contact">
+        <h2 class="section-title">Get in touch</h2>
+        <p class="muted">Want to collaborate or chat about kinetics, ML, or pilot plants? Drop a message.</p>
+        <div class="grid">
+          <div class="card" style="grid-column: span 7;">
+            <div class="shine"></div>
+            <form action="https://formspree.io/f/YOUR_ID" method="POST">
+              <input aria-label="Your name" name="name" placeholder="Your name" required />
+              <input aria-label="Your email" name="email" type="email" placeholder="Email" required />
+              <textarea aria-label="Your message" name="message" placeholder="Message"></textarea>
+              <button class="btn" type="submit">Send message</button>
+            </form>
+          </div>
+          <div class="card" style="grid-column: span 5;">
+            <div class="shine"></div>
+            <h3>Elsewhere</h3>
+            <p class="muted">Find me on the internet:</p>
+            <p>
+              <a class="ghost" href="https://github.com/YOUR_USERNAME" target="_blank" rel="noopener">GitHub</a>
+              <a class="ghost" href="https://www.linkedin.com/in/YOUR_LINKEDIN" target="_blank" rel="noopener">LinkedIn</a>
+              <a class="ghost" href="mailto:YOUR_EMAIL@example.com">Email</a>
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <footer>
+        <p>© <span id="year"></span> Reza Monjezi · Built with vanilla HTML/CSS/JS · <a href="#" class="ghost" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;">Back to top</a></p>
+      </footer>
+    </div>
+  </main>
+
+  <script>
+    // Preserve theme
+    const root = document.documentElement;
+    const toggle = document.getElementById('theme-toggle');
+    const saved = localStorage.getItem('theme');
+    if (saved) root.setAttribute('data-theme', saved);
+    toggle.addEventListener('click', () => {
+      const mode = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      root.setAttribute('data-theme', mode);
+      localStorage.setItem('theme', mode);
+    });
+
+    // Fancy hover shine on cards
+    const cards = document.querySelectorAll('.card');
+    cards.forEach(c => c.addEventListener('mousemove', e => {
+      const r = c.getBoundingClientRect();
+      c.style.setProperty('--x', `${e.clientX - r.left}px`);
+    }));
+
+    // Year
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Star / particle field
+    const canvas = document.getElementById('stars');
+    const ctx = canvas.getContext('2d');
+    let w, h, stars;
+
+    function resize() {
+      w = canvas.width = innerWidth; h = canvas.height = innerHeight;
+      stars = Array.from({length: Math.min(160, Math.floor(w * h / 12000))}, () => ({
+        x: Math.random()*w,
+        y: Math.random()*h,
+        z: Math.random()*0.8 + 0.2,
+        vx: (Math.random()-0.5)*0.2,
+        vy: (Math.random()-0.5)*0.2,
+      }));
+    }
+    addEventListener('resize', resize); resize();
+
+    function tick() {
+      ctx.clearRect(0,0,w,h);
+      for (const s of stars) {
+        s.x += s.vx; s.y += s.vy;
+        if (s.x<0) s.x=w; if (s.x>w) s.x=0; if (s.y<0) s.y=h; if (s.y>h) s.y=0;
+        const r = 1.2 * s.z * (matchMedia('(prefers-reduced-motion: reduce)').matches ? 0.5 : 1);
+        ctx.beginPath(); ctx.arc(s.x, s.y, r, 0, Math.PI*2);
+        ctx.fillStyle = `rgba(255,255,255,${0.6*s.z})`; ctx.fill();
+      }
+      requestAnimationFrame(tick);
+    }
+    tick();
+
+    // Smooth anchor scrolling
+    document.querySelectorAll('a[href^="#"]').forEach(a => a.addEventListener('click', e => {
+      const id = a.getAttribute('href').slice(1);
+      const el = document.getElementById(id);
+      if (el) { e.preventDefault(); el.scrollIntoView({behavior:'smooth', block:'start'}); }
+    }));
+  </script>
 </body>
 </html>
