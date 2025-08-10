@@ -22,16 +22,17 @@
       --shadow: 0 10px 30px rgba(0,0,0,0.35);
       --radius: 20px;
       --header-h: 72px;
+      --section-gap: 70px;
+      /* NEW: single content column width so sections align */
+      --content-w: 920px;
+      color-scheme: dark light;
     }
 
-    /* Modern (pastel) theme */
     html[data-theme="modern"] {
       --bg: #fbfbff;
       --bg-2: #ffffff;
       --text: #0d1222;
       --muted: #5b6478;
-      --accent: #7c5cff;
-      --accent-2: #2dd4bf;
       --card: rgba(255,255,255,0.7);
       --glass: rgba(255,255,255,0.8);
       --border: rgba(0,0,0,0.06);
@@ -41,7 +42,7 @@
     * { box-sizing: border-box; }
     html, body { height: 100%; }
 
-    /* One continuous page background */
+    /* Background */
     html::before{
       content:""; position:fixed; inset:0; z-index:-2;
       background:
@@ -67,22 +68,19 @@
       font-family:'Inter', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
       color:var(--text);
       background:transparent;
-      overflow-x:hidden;
+      overflow-x: visible;
       padding-top:calc(var(--header-h) + 12px);
     }
 
-    /* Subtle noise */
     .noise{ pointer-events:none; position:fixed; inset:0; z-index:0;
       background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="240" height="240" viewBox="0 0 240 240"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23n)" opacity="0.03"/></svg>');
       mix-blend-mode:soft-light; opacity:.9;
     }
     html[data-theme="modern"] .noise{ opacity:.25; mix-blend-mode:normal; }
 
-    /* Stars (hidden in modern) */
     #stars{ position:fixed; inset:0; z-index:0; opacity:.5; transition:opacity .25s ease; }
     html[data-theme="modern"] #stars{ opacity:0; }
 
-    /* Fixed header */
     header{
       position:fixed; inset:0 0 auto 0; z-index:100; height:var(--header-h);
       display:grid; align-items:center;
@@ -111,25 +109,39 @@
     main{ position:relative; z-index:1; }
     .wrap{ max-width:1100px; margin:0 auto; padding:40px 20px; }
 
-    /* HERO */
-    .hero{ display:grid; gap:28px; align-items:center; padding:70px 0; grid-template-columns:1.2fr .8fr; min-height: 88vh; }
-    .hero h1{ font-size: clamp(36px, 6vw, 64px); line-height:1.06; margin:0; letter-spacing:-0.02em; }
+    /* NEW: content column helper */
+    .measure{
+      max-width: var(--content-w);
+      width: 100%;
+      margin-inline: 0; /* stick to wrap’s padding edge */
+    }
+
+    /* === Section rhythm ==================================================== */
+    section{ margin-block: var(--section-gap); scroll-margin-top: calc(var(--header-h) + 16px); }
+    section:first-of-type{ margin-top: var(--section-gap); }
+
+    /* === HERO ================================================== */
+    .hero{ display:grid; gap:24px; grid-template-columns:1fr; }
+    .hero h1{
+      font-size: clamp(36px, 6vw, 64px);
+      line-height:1.06; margin:0; letter-spacing:-0.02em;
+      overflow-wrap:anywhere; text-wrap:balance;
+    }
     .hero p{ color:var(--muted); font-size: clamp(16px, 2.2vw, 19px); margin:10px 0 16px; }
     .cta{ display:flex; gap:12px; flex-wrap:wrap; }
 
-    /* Base pill */
-    .pill{
-      display:inline-flex; align-items:center; gap:10px; padding:10px 14px;
-      border-radius:999px; border:1px solid var(--border); background: rgba(255,255,255,0.04); color:var(--muted);
-      font-size:14px; line-height:1.2;
-    }
+    /* Pill */
+    .pill{ display:inline-flex; align-items:center; gap:10px; padding:10px 14px; border-radius:999px; border:1px solid var(--border); background: rgba(255,255,255,0.04); color:var(--muted); font-size:14px; line-height:1.2; }
 
-    /* FULL-BLEED, mesmerising announcement banner */
+    /* Announcement pill — block-level inside the content column */
     .pill--wide.announce{
-      width:100vw;             /* spans full page width */
-      margin-left:50%;         /* center against container */
-      transform:translateX(-50%);
-      padding:16px 24px; border-radius:28px; border:1px solid transparent;
+      display:block;          /* override inline-flex */
+      width:100%;
+      box-sizing:border-box;
+      margin-inline:0;
+      padding:20px 20px;      /* matches card text inset */
+      border-radius:28px;
+      border:1px solid transparent;
       background:
         linear-gradient(var(--bg-2), var(--bg-2)) padding-box,
         linear-gradient(135deg, rgba(124,92,255,0.9), rgba(45,212,191,0.9)) border-box;
@@ -139,11 +151,7 @@
       -webkit-backdrop-filter: blur(14px) saturate(150%);
       position: relative; overflow: hidden;
     }
-    .pill--wide.announce::after{
-      content:""; position:absolute; inset:-30%;
-      background: radial-gradient(700px 240px at var(--glow-x, 5%) -20%, rgba(255,255,255,.2), transparent 60%);
-      pointer-events:none; mix-blend-mode:soft-light; animation: shine 7s ease-in-out infinite;
-    }
+    .pill--wide.announce::after{ content:""; position:absolute; inset:-30%; background: radial-gradient(700px 240px at var(--glow-x, 5%) -20%, rgba(255,255,255,.2), transparent 60%); pointer-events:none; mix-blend-mode:soft-light; animation: shine 7s ease-in-out infinite; }
     @keyframes shine { 0%{ --glow-x: 0%; } 50%{ --glow-x: 100%; } 100%{ --glow-x: 0%; } }
 
     html[data-theme="modern"] .pill--wide.announce{
@@ -154,30 +162,11 @@
       color:#0d1222;
     }
 
-    .avatar{ width:min(360px,85%); justify-self:center; aspect-ratio:1/1; border-radius:28px; padding:8px;
-      background:linear-gradient(135deg,var(--accent),var(--accent-2)); box-shadow:var(--shadow);
-    }
-    .avatar-inner{ width:100%; height:100%; border-radius:22px; background:var(--bg-2);
-      display:grid; place-items:center; position:relative; overflow:hidden;
-    }
-    .avatar-inner::before{
-      content:""; position:absolute; inset:-30%;
-      background: radial-gradient(350px 350px at 80% 20%, rgba(124,92,255,0.25), transparent 60%),
-                  radial-gradient(300px 300px at 20% 80%, rgba(45,212,191,0.25), transparent 60%);
-      filter: blur(30px); animation: drift 14s ease-in-out infinite alternate;
-    }
-    @keyframes drift{ from{ transform: rotate(0deg) translateY(-10px);} to{ transform: rotate(8deg) translateY(10px);} }
-    .avatar svg{ width:70%; opacity:.9; }
-
-    /* Sections & cards */
-    section{ margin:70px 0; scroll-margin-top: calc(var(--header-h) + 16px); }
+    /* Cards & common UI */
     .section-title{ font-size:28px; margin:0 0 18px; }
     .muted{ color:var(--muted); }
-
     .grid{ display:grid; grid-template-columns:repeat(12,1fr); gap:16px; }
-    .card{ grid-column:span 4; background:var(--card); border:1px solid var(--border); border-radius:var(--radius);
-      padding:20px; position:relative; overflow:hidden; transition: transform .2s ease, border-color .2s ease;
-    }
+    .card{ grid-column:span 4; background:var(--card); border:1px solid var(--border); border-radius:var(--radius); padding:20px; position:relative; overflow:hidden; transition: transform .2s ease, border-color .2s ease; }
     .card:hover{ transform:translateY(-4px); border-color: rgba(124,92,255,0.45); }
     .card .shine{ position:absolute; inset:-1px; background: radial-gradient(400px 80px at var(--x,50%) -10%, rgba(255,255,255,0.18), transparent 40%); pointer-events:none; }
 
@@ -205,13 +194,14 @@
     footer{ margin:80px 0 20px; color:var(--muted); text-align:center; }
 
     @media (max-width:900px){
-      .hero{ grid-template-columns:1fr; padding:40px 0; }
       .card{ grid-column:span 6; }
+      :root { --content-w: 760px; }
     }
     @media (max-width:640px){
       .nav{ grid-template-columns:auto 1fr auto; padding:10px 8px; }
       nav a{ margin:0 6px; }
       .card{ grid-column:span 12; }
+      :root { --content-w: 100%; }
     }
   </style>
 </head>
@@ -244,9 +234,9 @@
 
   <main>
     <div class="wrap">
+      <!-- HERO uses a shared content column -->
       <section class="hero">
-        <div>
-          <!-- FULL-PAGE announcement banner -->
+        <div class="measure">
           <p class="pill pill--wide announce" role="status" aria-live="polite">
             <span aria-hidden="true">✨</span>
             <strong>Actively seeking opportunities</strong> · Chemical (Reaction) Engineering · Mechanistic &amp; Data-Driven Modeling
@@ -262,67 +252,56 @@
             <a class="ghost" href="#projects">See my work</a>
           </div>
         </div>
-
-        <div class="avatar" aria-hidden="true">
-          <div class="avatar-inner">
-            <svg viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg">
-              <defs>
-                <linearGradient id="g" x1="0" x2="1" y1="0" y2="1">
-                  <stop offset="0%" stop-color="var(--accent)"/>
-                  <stop offset="100%" stop-color="var(--accent-2)"/>
-                </linearGradient>
-              </defs>
-              <path fill="url(#g)" d="M300,520Q223,540,150,500Q77,460,67,380Q57,300,82,224Q107,148,174,120Q241,92,317,99Q393,106,443,158Q493,210,522,280Q551,350,512,410Q473,470,400,500Q327,530,300,520Z"/>
-              <circle cx="300" cy="280" r="120" fill="rgba(0,0,0,0.15)"/>
-              <rect x="255" y="250" width="90" height="20" rx="10" fill="white" opacity="0.9"/>
-              <rect x="260" y="290" width="80" height="12" rx="6" fill="white" opacity="0.5"/>
-            </svg>
-          </div>
-        </div>
       </section>
 
+      <!-- ABOUT uses the same content column for BOTH intro and grid -->
       <section id="about">
-        <h2 class="section-title">About</h2>
-        <p class="muted">I’m a chemical reaction engineer who enjoys the craft of clean experimental design, reproducible data pipelines, and models that earn their keep.</p>
-        <div class="grid">
-          <div class="card" style="grid-column: span 6;">
-            <div class="shine"></div>
-            <h3>What I do</h3>
-            <ul>
-              <li>Design catalytic pilot setups with safety at the core.</li>
-              <li>Estimate kinetic parameters and quantify uncertainty.</li>
-              <li>Automate experiments and data processing in Python.</li>
-              <li>Bridge mechanistic models with ML for faster iteration.</li>
-            </ul>
-          </div>
-          <div class="card" style="grid-column: span 6;">
-            <div class="shine"></div>
-            <h3>Toolbox</h3>
-            <p class="muted">Python (NumPy, SciPy, scikit-learn), DAQ/PLC, DCS/MES basics, statistics, safety reviews (HAZOP-lite).</p>
-            <div class="tags">
-              <span class="tag">Python</span><span class="tag">Kinetics</span><span class="tag">Optimization</span><span class="tag">DAQ</span><span class="tag">PLC</span>
+        <div class="measure">
+          <h2 class="section-title">About</h2>
+          <p class="muted">I’m a chemical reaction engineer who enjoys the craft of clean experimental design, reproducible data pipelines, and models that earn their keep.</p>
+
+          <div class="grid">
+            <div class="card" style="grid-column: span 6;">
+              <div class="shine"></div>
+              <h3>What I do</h3>
+              <ul>
+                <li>Design catalytic pilot setups with safety at the core.</li>
+                <li>Estimate kinetic parameters and quantify uncertainty.</li>
+                <li>Automate experiments and data processing in Python.</li>
+                <li>Bridge mechanistic models with ML for faster iteration.</li>
+              </ul>
+            </div>
+            <div class="card" style="grid-column: span 6;">
+              <div class="shine"></div>
+              <h3>Toolbox</h3>
+              <p class="muted">Python (NumPy, SciPy, scikit-learn), DAQ/PLC, DCS/MES basics, statistics, safety reviews (HAZOP-lite).</p>
+              <div class="tags">
+                <span class="tag">Python</span><span class="tag">Kinetics</span><span class="tag">Optimization</span><span class="tag">DAQ</span><span class="tag">PLC</span>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
       <section id="education">
-        <h2 class="section-title">Education</h2>
-        <div class="grid">
-          <div class="card" style="grid-column: span 12;">
-            <div class="shine"></div>
-            <div class="timeline">
-              <div class="t-item">
-                <div class="t-role">PhD in Chemical Engineering — Ghent University (UGent)</div>
-                <div class="t-meta">2019–2025 · Laboratory for Chemical Technology (LCT) · Thesis: “Oxidative catalytic abatement of VOC in the presence of O₃”. Promoter: Prof. Joris W. Thybaut</div>
-              </div>
-              <div class="t-item">
-                <div class="t-role">MSc in Chemical Engineering — Sharif University of Technology</div>
-                <div class="t-meta">2013–2015</div>
-              </div>
-              <div class="t-item">
-                <div class="t-role">BSc in Chemical Engineering — Petroleum University of Technology</div>
-                <div class="t-meta">2009–2013</div>
+        <h2 class="section-title measure">Education</h2>
+        <div class="measure">
+          <div class="grid">
+            <div class="card" style="grid-column: span 12;">
+              <div class="shine"></div>
+              <div class="timeline">
+                <div class="t-item">
+                  <div class="t-role">PhD in Chemical Engineering — Ghent University (UGent)</div>
+                  <div class="t-meta">2019–2025 · Laboratory for Chemical Technology (LCT) · Thesis: “Oxidative catalytic abatement of VOC in the presence of O₃”. Promoter: Prof. Joris W. Thybaut</div>
+                </div>
+                <div class="t-item">
+                  <div class="t-role">MSc in Chemical Engineering — Sharif University of Technology</div>
+                  <div class="t-meta">2013–2015</div>
+                </div>
+                <div class="t-item">
+                  <div class="t-role">BSc in Chemical Engineering — Petroleum University of Technology</div>
+                  <div class="t-meta">2009–2013</div>
+                </div>
               </div>
             </div>
           </div>
@@ -330,72 +309,83 @@
       </section>
 
       <section id="experience">
-        <h2 class="section-title">Experience</h2>
-        <div class="timeline">
-          <div class="t-item">
-            <div class="t-role">Postdoctoral Researcher — UCLouvain</div>
-            <div class="t-meta">2025 · Prof. Juray De Wilde · Adsorption–Methanation Kinetics</div>
-          </div>
-          <div class="t-item">
-            <div class="t-role">PhD Researcher — Ghent University (UGent)</div>
-            <div class="t-meta">2019–2025 · Ozone-assisted catalytic oxidation; pilot unit design (LoPOx)</div>
-          </div>
-          <div class="t-item">
-            <div class="t-role">Project Lead</div>
-            <div class="t-meta">€250k budget · 30% cost reduction vs. vendor quotes</div>
+        <h2 class="section-title measure">Experience</h2>
+        <div class="measure">
+          <div class="grid">
+            <div class="card" style="grid-column: span 12;">
+              <div class="shine"></div>
+              <div class="timeline">
+                <div class="t-item">
+                  <div class="t-role">Postdoctoral Researcher — UCLouvain</div>
+                  <div class="t-meta">2025 · Prof. Juray De Wilde · Adsorption–Methanation Kinetics</div>
+                </div>
+                <div class="t-item">
+                  <div class="t-role">PhD Researcher — Ghent University (UGent)</div>
+                  <div class="t-meta">2019–2025 · Ozone-assisted catalytic oxidation; pilot unit design (LoPOx)</div>
+                </div>
+                <div class="t-item">
+                  <div class="t-role">Project Lead</div>
+                  <div class="t-meta">€250k budget · 30% cost reduction vs. vendor quotes</div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
       <section id="projects">
-        <h2 class="section-title">Selected Projects</h2>
-        <p class="muted">A few things I’ve built and published.</p>
-        <div class="grid">
-          <article class="card" tabindex="0">
-            <div class="shine"></div>
-            <div class="pill">LoPOx Pilot · 2023–2025</div>
-            <h3 class="project-title">Ozone-Assisted Catalytic Oxidation Platform</h3>
-            <p class="project-desc">Designed and constructed a custom catalytic pilot unit (€250k) enabling safe ozone-assisted VOC abatement; integrated PLC and Python DAQ for closed-loop testing.</p>
-            <div class="tags">
-              <span class="tag">O₃</span><span class="tag">Mn/Cu</span><span class="tag">PLC</span><span class="tag">Python</span>
-            </div>
-          </article>
-          <article class="card" tabindex="0">
-            <div class="shine"></div>
-            <div class="pill">Kinetics · 2024–2025</div>
-            <h3 class="project-title">Model Discrimination for CH₄ Oxidation</h3>
-            <p class="project-desc">Applied Python-based parameter estimation and model selection to unravel rate-limiting steps and surface coverages with rigorous uncertainty quantification.</p>
-            <div class="tags">
-              <span class="tag">MLE</span><span class="tag">AIC/BIC</span><span class="tag">Mechanistic</span><span class="tag">Sensitivity</span>
-            </div>
-          </article>
-          <article class="card" tabindex="0">
-            <div class="shine"></div>
-            <div class="pill">CO₂ Methanation · 2025</div>
-            <h3 class="project-title">Integrated Adsorption–Methanation</h3>
-            <p class="project-desc">Evaluated a novel bifunctional material for CO₂ capture and in-situ methanation. Combined mechanistic models with data-driven screening to optimize light-off and stability.</p>
-            <div class="tags">
-              <span class="tag">CO₂</span><span class="tag">CH₄</span><span class="tag">Kinetics</span><span class="tag">ML</span>
-            </div>
-          </article>
-        </div>
-      </section>
-
-      <section id="contact">
-        <h2 class="section-title">Contact</h2>
-        <div class="grid">
-          <div class="card" style="grid-column: span 12;">
-            <div class="shine"></div>
-            <p>
-              <a class="ghost" href="https://github.com/YOUR_USERNAME" target="_blank" rel="noopener">GitHub</a>
-              <a class="ghost" href="https://www.linkedin.com/in/reza-monjezi-6295b4b4/" target="_blank" rel="noopener">LinkedIn</a>
-              <a class="ghost" href="mailto:Reza.Monjezi@UCLouvain.be">Email</a>
-            </p>
+        <h2 class="section-title measure">Selected Projects</h2>
+        <div class="measure">
+          <p class="muted">A few things I’ve built and published.</p>
+          <div class="grid">
+            <article class="card" tabindex="0">
+              <div class="shine"></div>
+              <div class="pill">LoPOx Pilot · 2023–2025</div>
+              <h3 class="project-title">Ozone-Assisted Catalytic Oxidation Platform</h3>
+              <p class="project-desc">Designed and constructed a custom catalytic pilot unit (€250k) enabling safe ozone-assisted VOC abatement; integrated PLC and Python DAQ for closed-loop testing.</p>
+              <div class="tags">
+                <span class="tag">O₃</span><span class="tag">Mn/Cu</span><span class="tag">PLC</span><span class="tag">Python</span>
+              </div>
+            </article>
+            <article class="card" tabindex="0">
+              <div class="shine"></div>
+              <div class="pill">Kinetics · 2024–2025</div>
+              <h3 class="project-title">Model Discrimination for CH₄ Oxidation</h3>
+              <p class="project-desc">Applied Python-based parameter estimation and model selection to unravel rate-limiting steps and surface coverages with rigorous uncertainty quantification.</p>
+              <div class="tags">
+                <span class="tag">MLE</span><span class="tag">AIC/BIC</span><span class="tag">Mechanistic</span><span class="tag">Sensitivity</span>
+              </div>
+            </article>
+            <article class="card" tabindex="0">
+              <div class="shine"></div>
+              <div class="pill">CO₂ Methanation · 2025</div>
+              <h3 class="project-title">Integrated Adsorption–Methanation</h3>
+              <p class="project-desc">Evaluated a novel bifunctional material for CO₂ capture and in-situ methanation. Combined mechanistic models with data-driven screening to optimize light-off and stability.</p>
+              <div class="tags">
+                <span class="tag">CO₂</span><span class="tag">CH₄</span><span class="tag">Kinetics</span><span class="tag">ML</span>
+              </div>
+            </article>
           </div>
         </div>
       </section>
 
-      <footer>
+      <section id="contact">
+        <h2 class="section-title measure">Contact</h2>
+        <div class="measure">
+          <div class="grid">
+            <div class="card" style="grid-column: span 12;">
+              <div class="shine"></div>
+              <p>
+                <a class="ghost" href="https://github.com/YOUR_USERNAME" target="_blank" rel="noopener">GitHub</a>
+                <a class="ghost" href="https://www.linkedin.com/in/reza-monjezi-6295b4b4/" target="_blank" rel="noopener">LinkedIn</a>
+                <a class="ghost" href="mailto:Reza.Monjezi@UCLouvain.be">Email</a>
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <footer class="measure">
         <p>© <span id="year"></span> Reza Monjezi · Built with vanilla HTML/CSS/JS ·
           <a href="#" class="ghost" onclick="window.scrollTo({top:0,behavior:'smooth'});return false;">Back to top</a>
         </p>
@@ -409,14 +399,12 @@
     const saved = localStorage.getItem('theme');
     if (saved) root.setAttribute('data-theme', saved);
 
-    // Toggle between dark and modern
     toggle.addEventListener('click', () => {
       const next = root.getAttribute('data-theme') === 'dark' ? 'modern' : 'dark';
       root.setAttribute('data-theme', next);
       localStorage.setItem('theme', next);
     });
 
-    // Card shine
     document.querySelectorAll('.card').forEach(c =>
       c.addEventListener('mousemove', e => {
         const r = c.getBoundingClientRect();
@@ -424,10 +412,8 @@
       })
     );
 
-    // Year
     document.getElementById('year').textContent = new Date().getFullYear();
 
-    // Stars
     const canvas = document.getElementById('stars');
     const ctx = canvas.getContext('2d');
     let w, h, stars;
@@ -455,7 +441,6 @@
     }
     tick();
 
-    // Smooth anchors
     document.querySelectorAll('a[href^="#"]').forEach(a => a.addEventListener('click', e => {
       const id = a.getAttribute('href').slice(1);
       const el = document.getElementById(id);
